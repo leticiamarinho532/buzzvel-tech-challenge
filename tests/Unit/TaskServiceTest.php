@@ -2,11 +2,13 @@
 
 namespace Tests\Unit;
 
+use App\Services\TaskService;
 use App\Models\Task;
 use App\Interfaces\TaskRepositoryInterface;
 use Tests\TestCase;
 use Exception;
 
+// TODO: verify the tasks factory creation
 class TaskServiceTest extends TestCase
 {
     private $taskRepositoryMock;
@@ -23,7 +25,7 @@ class TaskServiceTest extends TestCase
         // Arrange
         $fakeTasks = Task::factory()->times(10)->new();
         $this->taskRepositoryMock
-            ->shouldReceive('getAllDoctorPatients')
+            ->shouldReceive('getAll')
             ->andReturn($fakeTasks);
         $taskService = new TaskService($this->taskRepositoryMock);
 
@@ -43,7 +45,39 @@ class TaskServiceTest extends TestCase
         $taskService = new TaskService($this->taskRepositoryMock);
 
         // Act
-        $result = $taskService->getAllDoctorPatients();
+        $result = $taskService->getAll();
+
+        // Assert
+        $this->assertArrayHasKey('error', $result);
+    }
+
+    public function testShouldListOneTasks(): void
+    {
+        // Arrange
+        $fakeTask = Task::factory()->new()->make();
+        $this->taskRepositoryMock
+            ->shouldReceive('getOne')
+            ->andReturn($fakeTask);
+        $taskService = new TaskService($this->taskRepositoryMock);
+        $param = $fakeTask->id;
+
+        // Act
+        $result = $taskService->getOne($param);
+
+        // Assert
+        $this->assertEquals($fakeTask, $result);
+    }
+
+    public function testShouldThrowErrorWhenModelReturnsErrorOnListOneTasks(): void
+    {
+        // Arrange
+        $this->taskRepositoryMock
+            ->shouldReceive('getOne')
+            ->andThrow(new Exception('Expected Exception was thrown'));
+        $taskService = new TaskService($this->taskRepositoryMock);
+
+        // Act
+        $result = $taskService->getOne(1);
 
         // Assert
         $this->assertArrayHasKey('error', $result);
@@ -52,18 +86,19 @@ class TaskServiceTest extends TestCase
     public function testShouldCreateATask(): void
     {
         // Arrange
-        $fakeTask = Task::factory()->new();
+        $fakeTask = Task::factory()->new()->make();
         $this->taskRepositoryMock
             ->shouldReceive('create')
             ->andReturn($fakeTask);
         $taskService = new TaskService($this->taskRepositoryMock);
-        $body = $fakeTask;
+        $body = $fakeTask->getAttributes();
+        $expectedResponse = $fakeTask->getAttributes();
 
         // Act
         $result = $taskService->create($body);
 
         // Assert
-        $this->assertEquals($fakeTask, $result);
+        $this->assertEquals($expectedResponse, $result);
     }
 
     public function testShouldThrowValidationErrorWhenParamsInvalidOnCreateAPatient(): void
@@ -86,7 +121,7 @@ class TaskServiceTest extends TestCase
     public function testShouldThrowErrorWhenModelReturnsErrorOnCreateAPatient(): void
     {
         // Arrange
-        $fakeTask = Task::factory()->new();
+        $fakeTask = Task::factory()->new()->make();
         $this->taskRepositoryMock
             ->shouldReceive('create')
             ->andThrow(new Exception('Expected Exception was thrown'));
@@ -103,7 +138,7 @@ class TaskServiceTest extends TestCase
     public function testShouldUpdateATask(): void
     {
         // Arrange
-        $fakeTask = Task::factory()->new();
+        $fakeTask = Task::factory()->new()->make();
         $this->taskRepositoryMock
             ->shouldReceive('update')
             ->andReturn($fakeTask);
@@ -112,7 +147,7 @@ class TaskServiceTest extends TestCase
         $taskId = rand(1, 5);
 
         // Act
-        $result = $taskService->updatePatient($taskId, $body);
+        $result = $taskService->update($taskId, $body);
 
         // Assert
         $this->assertEquals($fakeTask, $result);
@@ -139,7 +174,7 @@ class TaskServiceTest extends TestCase
     public function testShouldThrowErrorWhenModelReturnsErrorOnUpdateATask(): void
     {
         // Arrange
-        $fakeTask = Task::factory()->new();
+        $fakeTask = Task::factory()->new()->make();
         $this->taskRepositoryMock
             ->shouldReceive('update')
             ->andThrow(new Exception('Expected Exception was thrown'));
@@ -157,7 +192,7 @@ class TaskServiceTest extends TestCase
     public function testShouldDeleteATask(): void
     {
         // Arrange
-        $fakeTask = Task::factory()->new();
+        $fakeTask = Task::factory()->new()->make();
         $this->taskRepositoryMock
             ->shouldReceive('delete')
             ->andReturn($fakeTask);
@@ -192,7 +227,7 @@ class TaskServiceTest extends TestCase
     public function testShouldThrowErrorWhenModelReturnsErrorOnDeleteATask(): void
     {
         // Arrange
-        $fakeTask = Task::factory()->new();
+        $fakeTask = Task::factory()->new()->make();
         $this->taskRepositoryMock
             ->shouldReceive('delete')
             ->andThrow(new Exception('Expected Exception was thrown'));

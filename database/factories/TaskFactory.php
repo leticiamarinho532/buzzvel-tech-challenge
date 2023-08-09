@@ -23,7 +23,7 @@ class TaskFactory extends Factory
             'file' => 'storage/app/example.txt',
             'user_id' => 1,
             'completed' => (bool)random_int(0, 1),
-            'completed_at' => (($this->faker->unique()->numberBetween(1, 10) % 2) ? $this->faker->time : null),
+            'completed_at' => (($this->faker->unique()->numberBetween(1, 10) % 2) ? $this->faker->date : null),
             'created_at' => $this->faker->time
         ];
     }

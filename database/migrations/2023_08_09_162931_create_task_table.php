@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('file', 255);
             $table->boolean('completed');
             $table->foreignId('user_id')->constrained();
-            $table->timestamp('completed_at');
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
         });
