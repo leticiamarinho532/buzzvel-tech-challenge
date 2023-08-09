@@ -12,8 +12,6 @@ COPY . /var/www/
 
 RUN adduser -D www 
 
-RUN composer install
-
 USER www
 WORKDIR /var/www/
 
