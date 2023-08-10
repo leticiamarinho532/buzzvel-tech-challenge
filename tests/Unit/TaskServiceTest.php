@@ -29,7 +29,7 @@ class TaskServiceTest extends TestCase
         $taskService = new TaskService($this->taskRepositoryMock);
 
         // Act
-        $result = $taskService->getAll();
+        $result = $taskService->getAll(1);
 
         // Assert
         $this->assertEquals($fakeTasks, $result);
@@ -44,7 +44,7 @@ class TaskServiceTest extends TestCase
         $taskService = new TaskService($this->taskRepositoryMock);
 
         // Act
-        $result = $taskService->getAll();
+        $result = $taskService->getAll(1);
 
         // Assert
         $this->assertArrayHasKey('error', $result);
@@ -101,6 +101,7 @@ class TaskServiceTest extends TestCase
     {
         // Arrange
         $fakeTask = Task::factory()->new()->make();
+        $fakeTask->userId = 1;
         $this->taskRepositoryMock
             ->shouldReceive('create')
             ->andReturn($fakeTask->getAttributes());
@@ -136,6 +137,7 @@ class TaskServiceTest extends TestCase
     {
         // Arrange
         $fakeTask = Task::factory()->new()->make();
+        $fakeTask->userId = 1;
         $this->taskRepositoryMock
             ->shouldReceive('create')
             ->andThrow(new Exception('Expected Exception was thrown'));
@@ -153,6 +155,7 @@ class TaskServiceTest extends TestCase
     {
         // Arrange
         $fakeTask = Task::factory()->new()->make();
+        $fakeTask->userId = 1;
         $this->taskRepositoryMock
             ->shouldReceive('getOne')
             ->andReturn($fakeTask->getAttributes());
