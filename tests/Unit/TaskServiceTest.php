@@ -67,6 +67,21 @@ class TaskServiceTest extends TestCase
         $this->assertEquals($fakeTask, $result);
     }
 
+    public function testShouldThrowErrorWhenTaskDontExistOnListOneTasks(): void
+    {
+        // Arrange
+        $this->taskRepositoryMock
+            ->shouldReceive('getOne')
+            ->andReturn(false);
+        $taskService = new TaskService($this->taskRepositoryMock);
+
+        // Act
+        $result = $taskService->getOne(1);
+
+        // Assert
+        $this->assertArrayHasKey('error', $result);
+    }
+
     public function testShouldThrowErrorWhenModelReturnsErrorOnListOneTasks(): void
     {
         // Arrange
@@ -156,6 +171,24 @@ class TaskServiceTest extends TestCase
         $this->assertEquals($expectedResponse, $result);
     }
 
+    public function testShouldThrowErrorWhenTaskDontExistOnUpdateATask(): void
+    {
+        // Arrange
+        $fakeTask = Task::factory()->new()->make();
+        $this->taskRepositoryMock
+            ->shouldReceive('getOne')
+            ->andReturn(false);
+        $taskService = new TaskService($this->taskRepositoryMock);
+        $body = $fakeTask->getAttributes();
+        $taskId = $fakeTask->id;
+
+        // Act
+        $result = $taskService->update($taskId, $body);
+
+        // Assert
+        $this->assertArrayHasKey('error', $result);
+    }
+
     public function testShouldThrowValidationErrorWhenParamsInvalidOnUpdateATask(): void
     {
         // Arrange
@@ -217,6 +250,22 @@ class TaskServiceTest extends TestCase
 
         // Assert
         $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testShouldThrowErrorWhenTaskDontExistOnDeleteATask(): void
+    {
+        // Arrange
+        $this->taskRepositoryMock
+            ->shouldReceive('getOne')
+            ->andReturn(false);
+        $taskService = new TaskService($this->taskRepositoryMock);
+        $taskId = 1;
+
+        // Act
+        $result = $taskService->delete($taskId);
+
+        // Assert
+        $this->assertArrayHasKey('error', $result);
     }
 
     public function testShouldThrowErrorWhenModelReturnsErrorOnDeleteATask(): void

@@ -89,8 +89,6 @@ class TaskService
 
             $result = $this->taskRepository->update($taskId, $data);
 
-            // $result = $this->formattData($return);
-
             return $result;
         } catch (ItemNotFoundException $e) {
             Log::error('Error in update a task: ' . $e->getMessage(), ['feature' => 'task']);
