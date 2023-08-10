@@ -17,10 +17,10 @@ class TaskService
     ) {
     }
 
-    public function getAll(): array|object
+    public function getAll($userId): array|object
     {
         try {
-            $result = $this->taskRepository->getAll();
+            $result = $this->taskRepository->getAll($userId);
 
             return $result;
         } catch (ValidationException $e) {
@@ -64,7 +64,7 @@ class TaskService
         try {
             $data = $this->validateAndPrepareData($taskInfos);
 
-            $result = $this->taskRepository->create($data);
+            $result = $this->taskRepository->create($taskInfos['userId'], $data);
 
             return $result;
         } catch (ValidationException $e) {
@@ -87,7 +87,7 @@ class TaskService
 
             $data = $this->validateAndPrepareData($taskInfos);
 
-            $result = $this->taskRepository->update($taskId, $data);
+            $result = $this->taskRepository->update($taskInfos['userId'], $taskId, $data);
 
             return $result;
         } catch (ItemNotFoundException $e) {
@@ -132,6 +132,8 @@ class TaskService
 
     private function validateAndPrepareData(array $taskInfos): array
     {
+        unset($taskInfos['userId']);
+
         $this->validateParams($taskInfos);
 
         $fileName = uniqid() . '.' . $taskInfos['file']->getClientOriginalExtension();

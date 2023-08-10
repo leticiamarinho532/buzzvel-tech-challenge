@@ -18,9 +18,11 @@ class TaskController extends Controller
 
     public function index(): JsonResponse
     {
+        $input = request(['userId']);
+
         $task = new TaskService($this->taskRepository);
 
-        $result = $task->getAll();
+        $result = $task->getAll($input['userId']);
 
         if (is_array($result) && in_array('error', $result)) {
             return response()->json([
@@ -66,6 +68,8 @@ class TaskController extends Controller
     public function update(int $taskId, Request $request): JsonResponse
     {
         $input = $request->all();
+
+        dd($input);
 
         $task = new TaskService($this->taskRepository);
 

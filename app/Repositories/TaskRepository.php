@@ -7,13 +7,15 @@ use App\Interfaces\TaskRepositoryInterface;
 
 class TaskRepository implements TaskRepositoryInterface
 {
-    public function getAll(): mixed
+    public function getAll($userId): mixed
     {
-        return Task::all();
+        return Task::where('user_id', '=', $userId)->get();
     }
 
-    public function create(array|object $taskInfos): mixed
+    public function create(int $userId, array|object $taskInfos): mixed
     {
+        $taskInfos['user_id'] = $userId;
+
         return Task::firstOrCreate($taskInfos);
     }  
 
@@ -22,8 +24,10 @@ class TaskRepository implements TaskRepositoryInterface
         return Task::find($taksId);
     }
 
-    public function update(int $taskId, array|object $taskInfos): mixed
+    public function update(int $userId, int $taskId, array|object $taskInfos): mixed
     {
+        $taskInfos['user_id'] = $userId;
+
         Task::where('id', '=', $taskId)
             ->update($taskInfos);
 
