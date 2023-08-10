@@ -55,6 +55,8 @@ class TaskService
         try {
             $this->validateParams($taskInfos);
 
+            $taskInfos = (object)$taskInfos;
+
             $originalFileName = $taskInfos->file->getClientOriginalName();
             $storedFile = Storage::disk('local')->put($originalFileName, file_get_contents($taskInfos->file));
 
@@ -62,7 +64,9 @@ class TaskService
                 throw new Exception('Error in store file in local.');
             }
 
-            $result = $this->taskRepository->create($taskInfos);
+            $data = $this->formatTaskData($taskInfos);
+
+            $result = $this->taskRepository->create($data);
 
             return $result;
         } catch (ValidationException $e) {
@@ -81,6 +85,8 @@ class TaskService
         try {
             $this->validateParams($taskInfos);
 
+            $taskInfos = (object)$taskInfos;
+
             $originalFileName = $taskInfos->file->getClientOriginalName();
             $storedFile = Storage::disk('local')->put($originalFileName, file_get_contents($taskInfos->file));
 
@@ -88,7 +94,9 @@ class TaskService
                 throw new Exception('Error in store file in local.');
             }
 
-            $result = $this->taskRepository->update($taskId, $taskInfos);
+            $data = $this->formatTaskData($taskInfos);
+
+            $result = $this->taskRepository->update($taskId, $data);
 
             return $result;
         } catch (ValidationException $e) {
@@ -122,14 +130,14 @@ class TaskService
     private function validateParams(array|object $params): null|Exception
     {
         $validator = Validator::make(
-            $params,
+            (array)$params,
             [
                 'title' => 'required|string|max:255',
                 'description' => 'required|string|max:255',
-                'file' => 'required|string|max:255',
+                'file' => 'required|file|max:255',
                 'completed' => 'required|boolean',
                 'user_id' => 'required|integer',
-                'completed_at' => 'required|date',
+                'completed_at' => 'date',
             ]
         );
 
@@ -139,4 +147,12 @@ class TaskService
 
         return null;
     }
+
+    private function formatTaskData(object $data): object
+    {
+        $data->file = 'app/storage/';
+
+        return $data;
+    }
+
 }

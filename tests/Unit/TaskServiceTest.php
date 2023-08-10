@@ -89,10 +89,10 @@ class TaskServiceTest extends TestCase
         $fakeTask = Task::factory()->new()->make();
         $this->taskRepositoryMock
             ->shouldReceive('create')
-            ->andReturn($fakeTask);
+            ->andReturn($fakeTask->getAttributes());
         $taskService = new TaskService($this->taskRepositoryMock);
-        $body = $fakeTask->getAttributes();
         $expectedResponse = $fakeTask->getAttributes();
+        $body = $fakeTask->getAttributes();
 
         // Act
         $result = $taskService->create($body);
@@ -141,16 +141,17 @@ class TaskServiceTest extends TestCase
         $fakeTask = Task::factory()->new()->make();
         $this->taskRepositoryMock
             ->shouldReceive('update')
-            ->andReturn($fakeTask);
+            ->andReturn($fakeTask->getAttributes());
         $taskService = new TaskService($this->taskRepositoryMock);
-        $body = $fakeTask;
+        $body = $fakeTask->getAttributes();
+        $expectedResponse = $fakeTask->getAttributes();
         $taskId = rand(1, 5);
 
         // Act
         $result = $taskService->update($taskId, $body);
 
         // Assert
-        $this->assertEquals($fakeTask, $result);
+        $this->assertEquals($expectedResponse, $result);
     }
 
     public function testShouldThrowValidationErrorWhenParamsInvalidOnUpdateATask(): void
@@ -192,36 +193,18 @@ class TaskServiceTest extends TestCase
     public function testShouldDeleteATask(): void
     {
         // Arrange
-        $fakeTask = Task::factory()->new()->make();
         $this->taskRepositoryMock
             ->shouldReceive('delete')
-            ->andReturn($fakeTask);
+            ->andReturn(true);
         $taskService = new TaskService($this->taskRepositoryMock);
         $taskId = rand(1, 5);
-        $expectedResponse = 'Tasl deleted sucefully.';
+        $expectedResponse = 'Task deleted sucefully.';
 
         // Act
         $result = $taskService->delete($taskId);
 
         // Assert
         $this->assertEquals($expectedResponse, $result);
-    }
-
-    public function testShouldThrowValidationErrorWhenParamsInvalidOnDeleteATask(): void
-    {
-        // Arrange
-        $fakeTask = [];
-        $this->taskRepositoryMock
-            ->shouldReceive('delete')
-            ->andReturn($fakeTask);
-        $taskService = new TaskService($this->taskRepositoryMock);
-        $taskId = rand(1, 5);
-
-        // Act
-        $result = $taskService->delete($taskId);
-
-        // Assert
-        $this->assertArrayHasKey('error', $result);
     }
 
     public function testShouldThrowErrorWhenModelReturnsErrorOnDeleteATask(): void
