@@ -8,7 +8,6 @@ use App\Interfaces\TaskRepositoryInterface;
 use Tests\TestCase;
 use Exception;
 
-// TODO: verify the tasks factory creation
 class TaskServiceTest extends TestCase
 {
     private $taskRepositoryMock;
@@ -126,7 +125,7 @@ class TaskServiceTest extends TestCase
             ->shouldReceive('create')
             ->andThrow(new Exception('Expected Exception was thrown'));
         $taskService = new TaskService($this->taskRepositoryMock);
-        $body = $fakeTask;
+        $body = $fakeTask->getAttributes();
 
         // Act
         $result = $taskService->create($body);
@@ -139,6 +138,9 @@ class TaskServiceTest extends TestCase
     {
         // Arrange
         $fakeTask = Task::factory()->new()->make();
+        $this->taskRepositoryMock
+            ->shouldReceive('getOne')
+            ->andReturn($fakeTask->getAttributes());
         $this->taskRepositoryMock
             ->shouldReceive('update')
             ->andReturn($fakeTask->getAttributes());
@@ -159,6 +161,9 @@ class TaskServiceTest extends TestCase
         // Arrange
         $fakeTask = [];
         $this->taskRepositoryMock
+            ->shouldReceive('getOne')
+            ->andReturn($fakeTask);
+        $this->taskRepositoryMock
             ->shouldReceive('update')
             ->andReturn($fakeTask);
         $taskService = new TaskService($this->taskRepositoryMock);
@@ -177,10 +182,13 @@ class TaskServiceTest extends TestCase
         // Arrange
         $fakeTask = Task::factory()->new()->make();
         $this->taskRepositoryMock
+            ->shouldReceive('getOne')
+            ->andReturn($fakeTask->getAttributes());
+        $this->taskRepositoryMock
             ->shouldReceive('update')
             ->andThrow(new Exception('Expected Exception was thrown'));
         $taskService = new TaskService($this->taskRepositoryMock);
-        $body = $fakeTask;
+        $body = $fakeTask->getAttributes();
         $taskId = rand(1, 5);
 
         // Act
@@ -193,6 +201,10 @@ class TaskServiceTest extends TestCase
     public function testShouldDeleteATask(): void
     {
         // Arrange
+        $fakeTask = Task::factory()->new()->make();
+        $this->taskRepositoryMock
+            ->shouldReceive('getOne')
+            ->andReturn($fakeTask->getAttributes());
         $this->taskRepositoryMock
             ->shouldReceive('delete')
             ->andReturn(true);
@@ -211,6 +223,9 @@ class TaskServiceTest extends TestCase
     {
         // Arrange
         $fakeTask = Task::factory()->new()->make();
+        $this->taskRepositoryMock
+            ->shouldReceive('getOne')
+            ->andReturn($fakeTask->getAttributes());
         $this->taskRepositoryMock
             ->shouldReceive('delete')
             ->andThrow(new Exception('Expected Exception was thrown'));
