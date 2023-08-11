@@ -16,15 +16,19 @@ class TaskRepository implements TaskRepositoryInterface
     {
         $taskInfos['user_id'] = $userId;
 
-        // return Task::firstOrCreate($taskInfos);
-        return Task::firstOrCreate([
+        $data = [
             'title' => $taskInfos['title'], 
             'description' => $taskInfos['description'], 
             'file' => $taskInfos['file'], 
             'completed' => $taskInfos['completed'], 
-            'user_id' => $userId, 
-            isset($taskInfos['completed_at']) ? ['completed_at' => $taskInfos['completed_at']] : ''
-        ]);
+            'user_id' => $userId,
+        ];
+
+        if (isset($taskInfos['completed_at'])) {
+            $data['completed_at'] = $taskInfos['completed_at'];
+        }
+
+        return Task::firstOrCreate($data);
     }  
 
     public function getOne(int $taksId): mixed
@@ -49,7 +53,6 @@ class TaskRepository implements TaskRepositoryInterface
         }
 
         Task::where('id', '=', $taskId)
-            // ->update($taskInfos);
             ->update($data);
 
         return Task::find($taskId);
