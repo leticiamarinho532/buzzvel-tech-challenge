@@ -105,7 +105,7 @@ class TaskService
         }
     }
 
-    public function delete(int $taskId): bool|array
+    public function delete(int $taskId): array
     {
         try {
             if (!$this->taskRepository->getOne($taskId)) {
@@ -114,7 +114,7 @@ class TaskService
 
             $this->taskRepository->delete($taskId);
 
-            return 'Tasks deleted successfully.';
+            return ['message' => 'Tasks deleted successfully.'];
         } catch (ItemNotFoundException $e) {
             Log::error('Error in delete a task: ' . $e->getMessage(), ['feature' => 'task']);
 
