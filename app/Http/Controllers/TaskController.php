@@ -69,8 +69,6 @@ class TaskController extends Controller
     {
         $input = $request->all();
 
-        dd($input);
-
         $task = new TaskService($this->taskRepository);
 
         $result = $task->update($taskId, $input);
