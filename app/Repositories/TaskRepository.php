@@ -12,11 +12,19 @@ class TaskRepository implements TaskRepositoryInterface
         return Task::where('user_id', '=', $userId)->get();
     }
 
-    public function create(int $userId, array|object $taskInfos): mixed
+    public function create(int $userId, array $taskInfos): mixed
     {
         $taskInfos['user_id'] = $userId;
 
-        return Task::firstOrCreate($taskInfos);
+        // return Task::firstOrCreate($taskInfos);
+        return Task::firstOrCreate([
+            'title' => $taskInfos['title'], 
+            'description' => $taskInfos['description'], 
+            'file' => $taskInfos['file'], 
+            'completed' => $taskInfos['completed'], 
+            'user_id' => $userId, 
+            isset($taskInfos['completed_at']) ? ['completed_at' => $taskInfos['completed_at']] : ''
+        ]);
     }  
 
     public function getOne(int $taksId): mixed
@@ -24,12 +32,25 @@ class TaskRepository implements TaskRepositoryInterface
         return Task::find($taksId);
     }
 
-    public function update(int $userId, int $taskId, array|object $taskInfos): mixed
+    public function update(int $userId, int $taskId, array $taskInfos): mixed
     {
         $taskInfos['user_id'] = $userId;
 
+        $data = [
+            'title' => $taskInfos['title'], 
+            'description' => $taskInfos['description'], 
+            'file' => $taskInfos['file'], 
+            'completed' => $taskInfos['completed'], 
+            'user_id' => $userId,
+        ];
+
+        if (isset($taskInfos['completed_at'])) {
+            $data['completed_at'] = $taskInfos['completed_at'];
+        }
+
         Task::where('id', '=', $taskId)
-            ->update($taskInfos);
+            // ->update($taskInfos);
+            ->update($data);
 
         return Task::find($taskId);
     }

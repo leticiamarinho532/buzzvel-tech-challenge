@@ -155,7 +155,6 @@ class TaskService
                 'description' => 'required|string|max:255',
                 'file' => 'required|file|max:255',
                 'completed' => 'required|boolean',
-                'user_id' => 'required|integer',
                 'completed_at' => 'date',
             ]
         );
