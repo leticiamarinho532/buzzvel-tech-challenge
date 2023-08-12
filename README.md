@@ -92,3 +92,5 @@ Observation: Stop the local apache and mysql for ports 8080 and 3306 be used for
 ## **6. Extra Infos**
 
 - In the Postman, on update route, the POST method is being used because of the body form-data type, in order to send an image in the body. Note that the PUT method is being set in the body of the route so that it reaches the route that has PUT as a method.
+
+- Because it is a technical challenge, I put the .env.example with information that in a real project, this information should not be public. They are only in this location to be easy to test the project.
