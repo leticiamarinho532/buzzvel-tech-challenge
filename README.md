@@ -13,7 +13,7 @@
     - Running
 5. Tests
     - Unit
-6. Extra Infos
+6. Important Informations
 
 ## **1. API documentation**
 Foi criado uma documentação no postman e diposnibilidazado nesse link:
@@ -89,7 +89,9 @@ Observation: Stop the local apache and mysql for ports 8080 and 3306 be used for
     To run the tests, enter the container of the back-end project `container name: app` using the command `docker exec -it ID_DO_CONTAINER bash` and use artisan to run the tests with the command `php artisan test`.
 
 
-## **6. Extra Infos**
+## **6. Important Informations**
+
+- Authentication has been added so that it is possible to create a user and then use the task routes, so that the project is functional with the routes.
 
 - In the Postman, on update route, the POST method is being used because of the body form-data type, in order to send an image in the body. Note that the PUT method is being set in the body of the route so that it reaches the route that has PUT as a method.
 
