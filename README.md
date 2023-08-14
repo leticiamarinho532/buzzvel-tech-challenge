@@ -26,6 +26,7 @@ https://documenter.getpostman.com/view/8202053/2s9Xy5Kpzc
 - **The authentication info for login in is:**     
     email : test@example.com    
     password: password
+- Obs: links to display images are having problems.
 
 ## **3. Technologies**
 1. PHP 8.1
