@@ -22,6 +22,7 @@ A documentation was created in the postman and made available at this link:
 https://documenter.getpostman.com/view/8202053/2s9Xy5Kpzc
 ## **2. Testing Online (with leticiamarinho.online link) infos**
 - Remember to use the ``/api`` before the ``/tasks`` and authentication routes.
+-  To test online on postman, use https in the route to work correctly. Ex: https://leticiamarinho.online/api/login/
 - **The authentication info for login in is:**     
     email : test@example.com    
     password: password
